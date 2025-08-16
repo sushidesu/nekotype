@@ -36,31 +36,34 @@ export default function RuleEditor({ rule, ruleFactory, onUpdate, onClose }: Rul
       case 'simple-replace': {
         const config = localRule.config as SimpleReplaceRule['config']
         return (
-          <div className="config-editor">
-            <div className="form-group">
-              <label>検索文字列:</label>
+          <div>
+            <div className="mb-4">
+              <label className="block mb-1 font-medium text-gray-700">検索文字列:</label>
               <input
                 type="text"
                 value={config.search}
                 onChange={(e) => updateConfig({ search: e.target.value })}
                 placeholder="置換したい文字列"
+                className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
               />
             </div>
-            <div className="form-group">
-              <label>置換文字列:</label>
+            <div className="mb-4">
+              <label className="block mb-1 font-medium text-gray-700">置換文字列:</label>
               <input
                 type="text"
                 value={config.replace}
                 onChange={(e) => updateConfig({ replace: e.target.value })}
                 placeholder="置換後の文字列"
+                className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
               />
             </div>
-            <div className="form-group">
-              <label>
+            <div className="mb-4">
+              <label className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={config.caseSensitive}
                   onChange={(e) => updateConfig({ caseSensitive: e.target.checked })}
+                  className="rounded"
                 />
                 大文字小文字を区別する
               </label>
@@ -72,34 +75,40 @@ export default function RuleEditor({ rule, ruleFactory, onUpdate, onClose }: Rul
       case 'regex': {
         const config = localRule.config as RegexRule['config']
         return (
-          <div className="config-editor">
-            <div className="form-group">
-              <label>正規表現パターン:</label>
+          <div>
+            <div className="mb-4">
+              <label className="block mb-1 font-medium text-gray-700">正規表現パターン:</label>
               <input
                 type="text"
                 value={config.pattern}
                 onChange={(e) => updateConfig({ pattern: e.target.value })}
                 placeholder="正規表現パターン"
-                className={!isValid ? 'invalid' : ''}
+                className={`w-full p-2 border rounded focus:outline-none focus:ring-1 ${
+                  !isValid 
+                    ? 'border-red-500 focus:border-red-500 focus:ring-red-500' 
+                    : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
+                }`}
               />
-              {!isValid && <span className="error">無効な正規表現です</span>}
+              {!isValid && <span className="text-red-500 text-sm mt-1">無効な正規表現です</span>}
             </div>
-            <div className="form-group">
-              <label>置換文字列:</label>
+            <div className="mb-4">
+              <label className="block mb-1 font-medium text-gray-700">置換文字列:</label>
               <input
                 type="text"
                 value={config.replacement}
                 onChange={(e) => updateConfig({ replacement: e.target.value })}
                 placeholder="置換後の文字列 ($1, $2等が使用可能)"
+                className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
               />
             </div>
-            <div className="form-group">
-              <label>フラグ:</label>
+            <div className="mb-4">
+              <label className="block mb-1 font-medium text-gray-700">フラグ:</label>
               <input
                 type="text"
                 value={config.flags}
                 onChange={(e) => updateConfig({ flags: e.target.value })}
                 placeholder="g, i, m等"
+                className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
               />
             </div>
           </div>
@@ -109,49 +118,58 @@ export default function RuleEditor({ rule, ruleFactory, onUpdate, onClose }: Rul
       case 'uppercase':
       case 'lowercase':
         return (
-          <div className="config-editor">
-            <p>このルールには設定項目がありません。</p>
+          <div>
+            <p className="text-gray-600">このルールには設定項目がありません。</p>
           </div>
         )
       
       default:
         return (
-          <div className="config-editor">
-            <p>このルールタイプの設定エディタは実装されていません。</p>
+          <div>
+            <p className="text-gray-600">このルールタイプの設定エディタは実装されていません。</p>
           </div>
         )
     }
   }
 
   return (
-    <div className="rule-editor">
-      <div className="editor-header">
-        <h4>ルール設定 - {ruleFactory.name}</h4>
-        <button onClick={onClose} className="close-button">×</button>
+    <div className="p-4 bg-gray-50">
+      <div className="flex justify-between items-center mb-4">
+        <h4 className="text-lg font-semibold text-gray-900">ルール設定 - {ruleFactory.name}</h4>
+        <button 
+          onClick={onClose} 
+          className="text-xl text-gray-500 hover:text-gray-700 p-0 bg-transparent border-none cursor-pointer"
+        >
+          ×
+        </button>
       </div>
       
-      <div className="editor-content">
-        <div className="form-group">
-          <label>ルール名:</label>
+      <div className="mb-4">
+        <div className="mb-4">
+          <label className="block mb-1 font-medium text-gray-700">ルール名:</label>
           <input
             type="text"
             value={localRule.name}
             onChange={(e) => updateName(e.target.value)}
             placeholder="ルール名"
+            className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
           />
         </div>
         
         {renderConfigEditor()}
       </div>
       
-      <div className="editor-footer">
-        <button onClick={onClose} className="cancel-button">
+      <div className="flex justify-end gap-2">
+        <button 
+          onClick={onClose} 
+          className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors"
+        >
           キャンセル
         </button>
         <button
           onClick={handleSave}
           disabled={!isValid}
-          className="save-button"
+          className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
         >
           保存
         </button>
