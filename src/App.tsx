@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import './App.css'
 import { createTransformationEngine, ruleFactories } from './utils/transformationEngine'
-import { AnyTransformationRule } from './types/transformation'
+import type { AnyTransformationRule } from './types/transformation'
 import RuleList from './components/RuleList'
 import TextEditor from './components/TextEditor'
 

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { AnyTransformationRule, TransformationRuleFactory, SimpleReplaceRule, RegexRule } from '../types/transformation'
+import type { AnyTransformationRule, TransformationRuleFactory, SimpleReplaceRule, RegexRule } from '../types/transformation'
 
 interface RuleEditorProps {
   rule: AnyTransformationRule
@@ -18,7 +18,7 @@ export default function RuleEditor({ rule, ruleFactory, onUpdate, onClose }: Rul
     }
   }
 
-  const updateConfig = (updates: Partial<typeof localRule.config>) => {
+  const updateConfig = (updates: any) => {
     setLocalRule(prev => ({
       ...prev,
       config: { ...prev.config, ...updates }

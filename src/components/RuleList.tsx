@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { AnyTransformationRule, TransformationRuleFactory } from '../types/transformation'
+import type { AnyTransformationRule, TransformationRuleFactory } from '../types/transformation'
 import RuleEditor from './RuleEditor'
 
 interface RuleListProps {

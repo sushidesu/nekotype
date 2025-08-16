@@ -1,4 +1,4 @@
-import { 
+import type { 
   AnyTransformationRule, 
   TransformationEngine, 
   TransformationRuleFactory,
@@ -25,7 +25,7 @@ export const ruleFactories: Record<string, TransformationRuleFactory> = {
         caseSensitive: true
       }
     }),
-    transform: (text: string, rule: SimpleReplaceRule) => {
+    transform: (text: string, rule: any) => {
       if (!rule.config.search) return text;
       
       if (rule.config.caseSensitive) {
@@ -60,7 +60,7 @@ export const ruleFactories: Record<string, TransformationRuleFactory> = {
         flags: 'g'
       }
     }),
-    transform: (text: string, rule: RegexRule) => {
+    transform: (text: string, rule: any) => {
       if (!rule.config.pattern) return text;
       
       try {

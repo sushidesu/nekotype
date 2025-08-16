@@ -46,7 +46,7 @@ export interface TransformationRuleFactory<T extends TransformationRule = AnyTra
   description: string;
   createDefault: () => T;
   transform: (text: string, rule: T) => string;
-  validateConfig: (config: T['config']) => boolean;
+  validateConfig: (config: any) => boolean;
 }
 
 export interface TransformationEngine {
