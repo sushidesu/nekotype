@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import type { AnyTransformationRule, TransformationRuleFactory, SimpleReplaceRule, RegexRule } from '../types/transformation'
+import type { AnyTransformationRule, TransformationRuleFactory } from '../types/transformation'
 
 interface RuleEditorProps {
   rule: AnyTransformationRule
@@ -18,11 +18,21 @@ export default function RuleEditor({ rule, ruleFactory, onUpdate, onClose }: Rul
     }
   }
 
-  const updateConfig = (updates: any) => {
-    setLocalRule(prev => ({
-      ...prev,
-      config: { ...prev.config, ...updates }
-    }))
+  const updateConfig = (updates: Record<string, unknown>) => {
+    setLocalRule(prev => {
+      // typeごとに処理を分岐
+      switch (prev.type) {
+        case 'simple-replace':
+          return { ...prev, config: { ...prev.config, ...updates } };
+        case 'regex':
+          return { ...prev, config: { ...prev.config, ...updates } };
+        case 'uppercase':
+        case 'lowercase':
+          return prev; // configの更新なし
+        default:
+          return prev;
+      }
+    })
   }
 
   const updateName = (name: string) => {
@@ -34,7 +44,8 @@ export default function RuleEditor({ rule, ruleFactory, onUpdate, onClose }: Rul
   const renderConfigEditor = () => {
     switch (rule.type) {
       case 'simple-replace': {
-        const config = localRule.config as SimpleReplaceRule['config']
+        if (localRule.type !== 'simple-replace') return null;
+        const config = localRule.config;
         return (
           <div>
             <div className="mb-4">
@@ -73,7 +84,8 @@ export default function RuleEditor({ rule, ruleFactory, onUpdate, onClose }: Rul
       }
       
       case 'regex': {
-        const config = localRule.config as RegexRule['config']
+        if (localRule.type !== 'regex') return null;
+        const config = localRule.config;
         return (
           <div>
             <div className="mb-4">

@@ -56,7 +56,7 @@ export default function TextEditor({ inputText, outputText, onInputChange }: Tex
           <div className="flex justify-between items-center mb-2">
             <h3 className="text-base font-medium text-gray-700">出力テキスト</h3>
             <button 
-              onClick={() => copyToClipboard(outputText)}
+              onClick={() => void copyToClipboard(outputText)}
               className="text-xl p-1 rounded hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               title="コピー"
               disabled={!outputText}

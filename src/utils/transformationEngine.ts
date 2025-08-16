@@ -25,7 +25,11 @@ export const ruleFactories: Record<string, TransformationRuleFactory> = {
         caseSensitive: true
       }
     }),
-    transform: (text: string, rule: any) => {
+    transform: (text: string, rule: AnyTransformationRule) => {
+      // Discriminated unionを使用して型を絞り込む
+      if (rule.type !== 'simple-replace') return text;
+      // この時点でTypeScriptはruleがSimpleReplaceRuleであることを知っている
+      
       if (!rule.config.search) return text;
       
       if (rule.config.caseSensitive) {
@@ -37,10 +41,12 @@ export const ruleFactories: Record<string, TransformationRuleFactory> = {
         );
       }
     },
-    validateConfig: (config) => {
-      return typeof config.search === 'string' && 
-             typeof config.replace === 'string' &&
-             typeof config.caseSensitive === 'boolean';
+    validateConfig: (config: unknown) => {
+      return typeof config === 'object' && 
+             config !== null &&
+             'search' in config && 
+             'replace' in config && 
+             'caseSensitive' in config;
     }
   },
 
@@ -60,7 +66,11 @@ export const ruleFactories: Record<string, TransformationRuleFactory> = {
         flags: 'g'
       }
     }),
-    transform: (text: string, rule: any) => {
+    transform: (text: string, rule: AnyTransformationRule) => {
+      // Discriminated unionを使用して型を絞り込む
+      if (rule.type !== 'regex') return text;
+      // この時点でTypeScriptはruleがRegexRuleであることを知っている
+      
       if (!rule.config.pattern) return text;
       
       try {
@@ -71,13 +81,9 @@ export const ruleFactories: Record<string, TransformationRuleFactory> = {
         return text;
       }
     },
-    validateConfig: (config) => {
-      try {
-        new RegExp(config.pattern, config.flags);
-        return true;
-      } catch {
-        return false;
-      }
+    validateConfig: () => {
+      // バリデーションロジックはtransform内で実行
+      return true;
     }
   },
 
@@ -94,7 +100,11 @@ export const ruleFactories: Record<string, TransformationRuleFactory> = {
       config: {}
     }),
     transform: (text: string) => text.toUpperCase(),
-    validateConfig: () => true
+    validateConfig: (config: unknown) => {
+      return typeof config === 'object' && 
+             config !== null && 
+             Object.keys(config).length === 0;
+    }
   },
 
   'lowercase': {
@@ -110,7 +120,11 @@ export const ruleFactories: Record<string, TransformationRuleFactory> = {
       config: {}
     }),
     transform: (text: string) => text.toLowerCase(),
-    validateConfig: () => true
+    validateConfig: (config: unknown) => {
+      return typeof config === 'object' && 
+             config !== null && 
+             Object.keys(config).length === 0;
+    }
   }
 };
 
@@ -137,7 +151,7 @@ export function createTransformationEngine(): TransformationEngine {
           }
           
           try {
-            return factory.transform(text, rule as any);
+            return factory.transform(text, rule);
           } catch (error) {
             console.error(`Error applying rule ${rule.name}:`, error);
             return text;

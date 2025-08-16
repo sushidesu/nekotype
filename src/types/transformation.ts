@@ -26,12 +26,12 @@ export interface RegexRule extends TransformationRule {
 
 export interface UpperCaseRule extends TransformationRule {
   type: 'uppercase';
-  config: {};
+  config: Record<string, never>;
 }
 
 export interface LowerCaseRule extends TransformationRule {
   type: 'lowercase';
-  config: {};
+  config: Record<string, never>;
 }
 
 export type AnyTransformationRule = 
@@ -40,13 +40,13 @@ export type AnyTransformationRule =
   | UpperCaseRule 
   | LowerCaseRule;
 
-export interface TransformationRuleFactory<T extends TransformationRule = AnyTransformationRule> {
+export interface TransformationRuleFactory {
   type: string;
   name: string;
   description: string;
-  createDefault: () => T;
-  transform: (text: string, rule: T) => string;
-  validateConfig: (config: any) => boolean;
+  createDefault: () => AnyTransformationRule;
+  transform: (text: string, rule: AnyTransformationRule) => string;
+  validateConfig: (config: unknown) => boolean;
 }
 
 export interface TransformationEngine {
