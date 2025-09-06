@@ -12,7 +12,9 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
+  DragOverlay,
   type DragEndEvent,
+  type DragStartEvent,
 } from "@dnd-kit/core"
 import {
   arrayMove,
@@ -70,7 +72,7 @@ function SortableRuleItem({
       style={style}
       className={`border border-gray-200 rounded bg-white ${
         !rule.enabled ? "opacity-60" : ""
-      } ${isDragging ? "opacity-50 scale-105 shadow-lg z-50" : ""}`}
+      } ${isDragging ? "opacity-0" : ""}`}
     >
       <div className="flex justify-between items-center p-3 bg-gray-50 border-b border-gray-200">
         <div className="flex items-center gap-2 flex-1">
@@ -147,6 +149,7 @@ export default function RuleList({
 }: RuleListProps) {
   const [selectedRuleType, setSelectedRuleType] = useState("")
   const [editingRuleId, setEditingRuleId] = useState<string | null>(null)
+  const [activeId, setActiveId] = useState<string | null>(null)
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -162,6 +165,10 @@ export default function RuleList({
     }
   }
 
+  const handleDragStart = (event: DragStartEvent) => {
+    setActiveId(String(event.active.id))
+  }
+
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event
 
@@ -171,6 +178,8 @@ export default function RuleList({
 
       onReorderRules(arrayMove(rules, oldIndex, newIndex))
     }
+
+    setActiveId(null)
   }
 
   return (
@@ -209,6 +218,7 @@ export default function RuleList({
         <DndContext
           sensors={sensors}
           collisionDetection={closestCenter}
+          onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
         >
           <SortableContext
@@ -229,6 +239,42 @@ export default function RuleList({
               ))}
             </div>
           </SortableContext>
+
+          <DragOverlay>
+            {activeId
+              ? (() => {
+                  const activeRule = rules.find((rule) => rule.id === activeId)
+                  return activeRule ? (
+                    <div className="border border-gray-200 rounded bg-white shadow-lg opacity-95">
+                      <div className="flex justify-between items-center p-3 bg-gray-50 border-b border-gray-200">
+                        <div className="flex items-center gap-2 flex-1">
+                          <DragHandleDots2Icon className="w-4 h-4 text-gray-400" />
+                          <span className="font-medium text-gray-900">
+                            {activeRule.name}
+                          </span>
+                          <span className="text-xs text-gray-500 bg-gray-200 px-2 py-1 rounded-full">
+                            {ruleFactories[activeRule.type]?.name}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <label className="flex items-center gap-1 text-xs cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={activeRule.enabled}
+                              className="rounded"
+                              readOnly
+                            />
+                            有効
+                          </label>
+                          <GearIcon className="w-5 h-5" />
+                          <TrashIcon className="w-5 h-5" />
+                        </div>
+                      </div>
+                    </div>
+                  ) : null
+                })()
+              : null}
+          </DragOverlay>
         </DndContext>
       )}
     </div>
