@@ -17,7 +17,6 @@ export const ruleFactories: Record<string, TransformationRuleFactory> = {
     description: "指定した文字列を別の文字列に置き換えます",
     createDefault: (): SimpleReplaceRule => ({
       id: crypto.randomUUID(),
-      name: "文字列置換",
       type: "simple-replace",
       enabled: true,
       order: 0,
@@ -52,6 +51,12 @@ export const ruleFactories: Record<string, TransformationRuleFactory> = {
         "caseSensitive" in config
       )
     },
+    getTitle: (rule: AnyTransformationRule) => {
+      if (rule.type !== "simple-replace") return "文字列置換"
+      const { search, replace } = rule.config
+      if (!search && !replace) return "文字列置換"
+      return `"${search}" → "${replace}"`
+    },
   },
 
   regex: {
@@ -60,7 +65,6 @@ export const ruleFactories: Record<string, TransformationRuleFactory> = {
     description: "正規表現を使用して高度な文字列変換を行います",
     createDefault: (): RegexRule => ({
       id: crypto.randomUUID(),
-      name: "正規表現",
       type: "regex",
       enabled: true,
       order: 0,
@@ -89,6 +93,12 @@ export const ruleFactories: Record<string, TransformationRuleFactory> = {
       // バリデーションロジックはtransform内で実行
       return true
     },
+    getTitle: (rule: AnyTransformationRule) => {
+      if (rule.type !== "regex") return "正規表現"
+      const { pattern } = rule.config
+      if (!pattern) return "正規表現"
+      return `/${pattern}/`
+    },
   },
 
   uppercase: {
@@ -97,7 +107,6 @@ export const ruleFactories: Record<string, TransformationRuleFactory> = {
     description: "すべての文字を大文字に変換します",
     createDefault: (): UpperCaseRule => ({
       id: crypto.randomUUID(),
-      name: "大文字変換",
       type: "uppercase",
       enabled: true,
       order: 0,
@@ -111,6 +120,7 @@ export const ruleFactories: Record<string, TransformationRuleFactory> = {
         Object.keys(config).length === 0
       )
     },
+    getTitle: () => "大文字変換",
   },
 
   lowercase: {
@@ -119,7 +129,6 @@ export const ruleFactories: Record<string, TransformationRuleFactory> = {
     description: "すべての文字を小文字に変換します",
     createDefault: (): LowerCaseRule => ({
       id: crypto.randomUUID(),
-      name: "小文字変換",
       type: "lowercase",
       enabled: true,
       order: 0,
@@ -133,6 +142,7 @@ export const ruleFactories: Record<string, TransformationRuleFactory> = {
         Object.keys(config).length === 0
       )
     },
+    getTitle: () => "小文字変換",
   },
 }
 

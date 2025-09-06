@@ -1,6 +1,5 @@
 export interface TransformationRule {
   id: string
-  name: string
   type: string
   enabled: boolean
   order: number
@@ -47,4 +46,5 @@ export interface TransformationRuleFactory {
   createDefault: () => AnyTransformationRule
   transform: (text: string, rule: AnyTransformationRule) => string
   validateConfig: (config: unknown) => boolean
+  getTitle: (rule: AnyTransformationRule) => string
 }

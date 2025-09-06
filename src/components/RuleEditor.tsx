@@ -43,10 +43,6 @@ export default function RuleEditor({
     })
   }
 
-  const updateName = (name: string) => {
-    setLocalRule((prev) => ({ ...prev, name }))
-  }
-
   const isValid = ruleFactory.validateConfig(localRule.config)
 
   const renderConfigEditor = () => {
@@ -176,7 +172,7 @@ export default function RuleEditor({
     <div className="p-4 bg-gray-50">
       <div className="flex justify-between items-center mb-4">
         <h4 className="text-lg font-semibold text-gray-900">
-          ルール設定 - {ruleFactory.name}
+          {ruleFactory.name}
         </h4>
         <button
           onClick={onClose}
@@ -186,22 +182,7 @@ export default function RuleEditor({
         </button>
       </div>
 
-      <div className="mb-4">
-        <div className="mb-4">
-          <label className="block mb-1 font-medium text-gray-700">
-            ルール名:
-          </label>
-          <input
-            type="text"
-            value={localRule.name}
-            onChange={(e) => updateName(e.target.value)}
-            placeholder="ルール名"
-            className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-          />
-        </div>
-
-        {renderConfigEditor()}
-      </div>
+      <div className="mb-4">{renderConfigEditor()}</div>
 
       <div className="flex justify-end gap-2">
         <button

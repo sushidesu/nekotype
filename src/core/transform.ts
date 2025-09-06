@@ -16,7 +16,7 @@ export const transform =
         try {
           return factory.transform(text, rule)
         } catch (error) {
-          console.error(`Error applying rule ${rule.name}:`, error)
+          console.error(`Error applying rule ${factory.getTitle(rule)}:`, error)
           return text
         }
       }, input)
