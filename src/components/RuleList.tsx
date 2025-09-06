@@ -4,7 +4,14 @@ import type {
   TransformationRuleFactory,
 } from "../types/transformation"
 import RuleEditor from "./RuleEditor"
-import { DragHandleDots2Icon, GearIcon, TrashIcon } from "@radix-ui/react-icons"
+import {
+  DragHandleDots2Icon,
+  GearIcon,
+  TrashIcon,
+  PlusIcon,
+  CheckCircledIcon,
+  CircleIcon,
+} from "@radix-ui/react-icons"
 import {
   DndContext,
   closestCenter,
@@ -91,20 +98,30 @@ function SortableRuleItem({
         </div>
 
         <div className="flex items-center gap-2">
-          <label className="flex items-center gap-1 text-xs cursor-pointer">
-            <input
-              type="checkbox"
-              checked={rule.enabled}
-              onChange={(e) =>
-                onUpdateRule(rule.id, {
-                  ...rule,
-                  enabled: e.target.checked,
-                })
-              }
-              className="rounded"
-            />
-            有効
-          </label>
+          <button
+            onClick={() =>
+              onUpdateRule(rule.id, {
+                ...rule,
+                enabled: !rule.enabled,
+              })
+            }
+            className={`p-1 rounded transition-colors ${
+              rule.enabled
+                ? "hover:bg-gray-200 text-green-600"
+                : "hover:bg-gray-200 text-gray-400"
+            }`}
+            title={
+              rule.enabled
+                ? "有効（クリックで無効化）"
+                : "無効（クリックで有効化）"
+            }
+          >
+            {rule.enabled ? (
+              <CheckCircledIcon className="w-5 h-5" />
+            ) : (
+              <CircleIcon className="w-5 h-5" />
+            )}
+          </button>
 
           <button
             onClick={() =>
@@ -147,7 +164,6 @@ export default function RuleList({
   onRemoveRule,
   onReorderRules,
 }: RuleListProps) {
-  const [selectedRuleType, setSelectedRuleType] = useState("")
   const [editingRuleId, setEditingRuleId] = useState<string | null>(null)
   const [activeId, setActiveId] = useState<string | null>(null)
 
@@ -158,11 +174,8 @@ export default function RuleList({
     })
   )
 
-  const handleAddRule = () => {
-    if (selectedRuleType) {
-      onAddRule(selectedRuleType)
-      setSelectedRuleType("")
-    }
+  const handleAddRule = (ruleType: string) => {
+    onAddRule(ruleType)
   }
 
   const handleDragStart = (event: DragStartEvent) => {
@@ -186,33 +199,24 @@ export default function RuleList({
     <div className="bg-white border border-gray-200 rounded-lg p-4 h-fit max-h-[calc(100vh-200px)] overflow-y-auto overflow-x-visible">
       <div className="mb-4 pb-2 border-b border-gray-200">
         <h2 className="text-base font-medium text-gray-700 mb-4">変換ルール</h2>
-        <div className="flex gap-2">
-          <select
-            value={selectedRuleType}
-            onChange={(e) => setSelectedRuleType(e.target.value)}
-            className="flex-1 p-2 border border-gray-300 rounded bg-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-          >
-            <option value="">ルールを選択...</option>
-            {availableRuleTypes.map((type) => (
-              <option key={type} value={type}>
-                {ruleFactories[type].name}
-              </option>
-            ))}
-          </select>
-          <button
-            onClick={handleAddRule}
-            disabled={!selectedRuleType}
-            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
-          >
-            追加
-          </button>
+        <div className="flex flex-wrap gap-2">
+          {availableRuleTypes.map((type) => (
+            <button
+              key={type}
+              onClick={() => handleAddRule(type)}
+              className="inline-flex items-center gap-1 px-3 py-1.5 text-sm text-gray-600 bg-gray-50 border border-gray-200 rounded-full hover:bg-gray-100 hover:border-gray-300 transition-colors"
+            >
+              <PlusIcon className="w-3 h-3" />
+              <span>{ruleFactories[type].name}</span>
+            </button>
+          ))}
         </div>
       </div>
 
       {rules.length === 0 ? (
         <div className="text-center text-gray-500 py-8">
           <p className="mb-2">まだルールが追加されていません。</p>
-          <p>上のドロップダウンからルールを選択して追加してください。</p>
+          <p>上のボタンからルールを選択して追加してください。</p>
         </div>
       ) : (
         <DndContext
@@ -257,15 +261,19 @@ export default function RuleList({
                           </span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <label className="flex items-center gap-1 text-xs cursor-pointer">
-                            <input
-                              type="checkbox"
-                              checked={activeRule.enabled}
-                              className="rounded"
-                              readOnly
-                            />
-                            有効
-                          </label>
+                          <div
+                            className={
+                              activeRule.enabled
+                                ? "text-green-600"
+                                : "text-gray-400"
+                            }
+                          >
+                            {activeRule.enabled ? (
+                              <CheckCircledIcon className="w-5 h-5" />
+                            ) : (
+                              <CircleIcon className="w-5 h-5" />
+                            )}
+                          </div>
                           <GearIcon className="w-5 h-5" />
                           <TrashIcon className="w-5 h-5" />
                         </div>
