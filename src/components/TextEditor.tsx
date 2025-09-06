@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { EraserIcon, CopyIcon } from "@radix-ui/react-icons"
+import { preferences } from "../infrastructure/preferences"
 
 interface TextEditorProps {
   inputText: string
@@ -12,7 +13,17 @@ export default function TextEditor({
   outputText,
   onInputChange,
 }: TextEditorProps) {
-  const [isEditorVertical, setIsEditorVertical] = useState(true)
+  const [isEditorVertical, setIsEditorVertical] = useState(() => {
+    const userPreferences = preferences.get()
+    return userPreferences ? userPreferences.editorLayout === "vertical" : true
+  })
+
+  const handleLayoutChange = (vertical: boolean) => {
+    setIsEditorVertical(vertical)
+    preferences.save({
+      editorLayout: vertical ? "vertical" : "horizontal",
+    })
+  }
 
   const copyToClipboard = async (text: string) => {
     try {
@@ -32,7 +43,7 @@ export default function TextEditor({
           <input
             type="checkbox"
             checked={isEditorVertical}
-            onChange={(e) => setIsEditorVertical(e.target.checked)}
+            onChange={(e) => handleLayoutChange(e.target.checked)}
             className="rounded"
           />
           縦並び表示
