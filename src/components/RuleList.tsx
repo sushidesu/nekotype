@@ -11,6 +11,7 @@ import {
   PlusIcon,
   CheckCircledIcon,
   CircleIcon,
+  Share2Icon,
 } from "@radix-ui/react-icons"
 import {
   DndContext,
@@ -40,6 +41,7 @@ interface RuleListProps {
   onUpdateRule: (id: string, rule: AnyTransformationRule) => void
   onRemoveRule: (id: string) => void
   onReorderRules: (rules: AnyTransformationRule[]) => void
+  onShare?: () => void
 }
 
 interface SortableRuleItemProps {
@@ -165,6 +167,7 @@ export default function RuleList({
   onUpdateRule,
   onRemoveRule,
   onReorderRules,
+  onShare,
 }: RuleListProps) {
   const [editingRuleId, setEditingRuleId] = useState<string | null>(null)
   const [activeId, setActiveId] = useState<string | null>(null)
@@ -200,7 +203,19 @@ export default function RuleList({
   return (
     <div className="bg-white border border-gray-200 rounded-lg p-4 h-fit max-h-[calc(100vh-200px)] overflow-y-auto overflow-x-visible">
       <div className="mb-4 pb-2 border-b border-gray-200">
-        <h2 className="text-base font-medium text-gray-700 mb-4">変換ルール</h2>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-base font-medium text-gray-700">変換ルール</h2>
+          {onShare && (
+            <button
+              onClick={onShare}
+              className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs text-gray-600 hover:text-gray-700 border border-gray-200 hover:border-gray-300 rounded-md transition-colors bg-white hover:bg-gray-50"
+              title="設定を共有"
+            >
+              <Share2Icon className="w-3 h-3" />
+              <span>共有</span>
+            </button>
+          )}
+        </div>
         <div className="flex flex-wrap gap-2">
           {availableRuleTypes.map((type) => (
             <button
