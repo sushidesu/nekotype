@@ -12,6 +12,7 @@ import {
   CheckCircledIcon,
   CircleIcon,
   Share2Icon,
+  CheckIcon,
 } from "@radix-ui/react-icons"
 import {
   DndContext,
@@ -41,7 +42,8 @@ interface RuleListProps {
   onUpdateRule: (id: string, rule: AnyTransformationRule) => void
   onRemoveRule: (id: string) => void
   onReorderRules: (rules: AnyTransformationRule[]) => void
-  onShare?: () => void
+  onClickShare?: () => void
+  isShowFeedbackShare?: boolean
 }
 
 interface SortableRuleItemProps {
@@ -167,7 +169,8 @@ export default function RuleList({
   onUpdateRule,
   onRemoveRule,
   onReorderRules,
-  onShare,
+  onClickShare,
+  isShowFeedbackShare,
 }: RuleListProps) {
   const [editingRuleId, setEditingRuleId] = useState<string | null>(null)
   const [activeId, setActiveId] = useState<string | null>(null)
@@ -205,13 +208,17 @@ export default function RuleList({
       <div className="mb-4 pb-2 border-b border-gray-200">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-base font-medium text-gray-700">変換ルール</h2>
-          {onShare && (
+          {onClickShare && (
             <button
-              onClick={onShare}
+              onClick={onClickShare}
               className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs text-gray-600 hover:text-gray-700 border border-gray-200 hover:border-gray-300 rounded-md transition-colors bg-white hover:bg-gray-50"
               title="設定を共有"
             >
-              <Share2Icon className="w-3 h-3" />
+              {isShowFeedbackShare ? (
+                <CheckIcon className="w-3 h-3 text-green-600" />
+              ) : (
+                <Share2Icon className="w-3 h-3" />
+              )}
               <span>共有</span>
             </button>
           )}

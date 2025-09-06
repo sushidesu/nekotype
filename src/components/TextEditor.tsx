@@ -5,8 +5,10 @@ import {
   ViewVerticalIcon,
   ViewHorizontalIcon,
   ClipboardIcon,
+  CheckIcon,
 } from "@radix-ui/react-icons"
 import { preferences } from "../infrastructure/preferences"
+import { useFeedback } from "../hooks/useFeedback"
 
 interface TextEditorProps {
   inputText: string
@@ -24,6 +26,10 @@ export default function TextEditor({
     return userPreferences ? userPreferences.editorLayout === "vertical" : true
   })
 
+  const [isShowFeedbackPaste, showPasteFeedback] = useFeedback()
+  const [isShowFeedbackCopy, showCopyFeedback] = useFeedback()
+  const [isShowFeedbackClear, showClearFeedback] = useFeedback()
+
   const handleLayoutChange = (vertical: boolean) => {
     setIsEditorVertical(vertical)
     preferences.save({
@@ -34,6 +40,7 @@ export default function TextEditor({
   const copyToClipboard = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text)
+      showCopyFeedback()
     } catch (err) {
       console.error("Failed to copy text: ", err)
     }
@@ -43,9 +50,15 @@ export default function TextEditor({
     try {
       const text = await navigator.clipboard.readText()
       onInputChange(text)
+      showPasteFeedback()
     } catch (err) {
       console.error("Failed to paste text: ", err)
     }
+  }
+
+  const clearInput = () => {
+    onInputChange("")
+    showClearFeedback()
   }
 
   return (
@@ -66,14 +79,22 @@ export default function TextEditor({
               className="p-1 rounded hover:bg-gray-100 transition-colors"
               title="ペースト"
             >
-              <ClipboardIcon className="w-5 h-5" />
+              {isShowFeedbackPaste ? (
+                <CheckIcon className="w-5 h-5 text-green-600" />
+              ) : (
+                <ClipboardIcon className="w-5 h-5" />
+              )}
             </button>
             <button
-              onClick={() => onInputChange("")}
+              onClick={clearInput}
               className="p-1 rounded hover:bg-gray-100 transition-colors"
               title="クリア"
             >
-              <EraserIcon className="w-5 h-5" />
+              {isShowFeedbackClear ? (
+                <CheckIcon className="w-5 h-5 text-green-600" />
+              ) : (
+                <EraserIcon className="w-5 h-5" />
+              )}
             </button>
             {isEditorVertical && (
               <button
@@ -103,7 +124,11 @@ export default function TextEditor({
               className="p-1 rounded hover:bg-gray-100 transition-colors"
               title="コピー"
             >
-              <CopyIcon className="w-5 h-5" />
+              {isShowFeedbackCopy ? (
+                <CheckIcon className="w-5 h-5 text-green-600" />
+              ) : (
+                <CopyIcon className="w-5 h-5" />
+              )}
             </button>
             {!isEditorVertical && (
               <button

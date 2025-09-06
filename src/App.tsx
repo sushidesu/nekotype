@@ -11,10 +11,13 @@ import {
   updateRule,
 } from "./core/rules"
 import { generateShareUrl, loadStateFromUrl } from "./utils/urlState"
+import { useFeedback } from "./hooks/useFeedback"
 
 function App() {
   const [inputText, setInputText] = useState("")
   const [rules, setRules] = useState<AnyTransformationRule[]>([])
+
+  const [isShowFeedbackShare, showShareFeedback] = useFeedback()
 
   const outputText = useMemo(() => {
     return transform(rules)(inputText)
@@ -61,6 +64,7 @@ function App() {
       const shareUrl = await generateShareUrl({ rules })
       if (shareUrl) {
         await navigator.clipboard.writeText(shareUrl)
+        showShareFeedback()
       }
     })()
   }
@@ -91,7 +95,8 @@ function App() {
             onUpdateRule={handleUpdateRule}
             onRemoveRule={handleRemoveRule}
             onReorderRules={handleReorderRules}
-            onShare={handleShare}
+            onClickShare={handleShare}
+            isShowFeedbackShare={isShowFeedbackShare}
           />
         </div>
       </main>
