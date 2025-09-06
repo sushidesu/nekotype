@@ -63,9 +63,6 @@ export default function TextEditor({
 
   return (
     <div className="bg-white border border-gray-200 rounded-lg p-4 h-fit">
-      <div className="mb-4">
-        <h2 className="text-lg font-medium text-gray-900">テキスト変換</h2>
-      </div>
       <div
         className={`flex gap-4 ${isEditorVertical ? "flex-col" : "flex-row"}`}
       >

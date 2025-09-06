@@ -13,6 +13,11 @@ export interface AppState {
  */
 export async function generateShareUrl(state: AppState): Promise<string> {
   try {
+    // ルールが空の場合はクエリパラメータなしのURLを返す
+    if (state.rules.length === 0) {
+      return window.location.origin + window.location.pathname
+    }
+
     const jsonString = JSON.stringify(state)
     const encodedState = await compressToEncodedURIComponent(jsonString)
 
