@@ -4,6 +4,12 @@ import type {
   TransformationRuleFactory,
 } from "../types/transformation"
 import RuleEditor from "./RuleEditor"
+import {
+  ChevronUpIcon,
+  ChevronDownIcon,
+  GearIcon,
+  TrashIcon,
+} from "@radix-ui/react-icons"
 
 interface RuleListProps {
   rules: AnyTransformationRule[]
@@ -118,19 +124,19 @@ export default function RuleList({
                   <button
                     onClick={() => moveRule(index, "up")}
                     disabled={index === 0}
-                    className="text-base p-1 rounded hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                    className="p-1 rounded hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                     title="上に移動"
                   >
-                    ↑
+                    <ChevronUpIcon className="w-5 h-5" />
                   </button>
 
                   <button
                     onClick={() => moveRule(index, "down")}
                     disabled={index === rules.length - 1}
-                    className="text-base p-1 rounded hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                    className="p-1 rounded hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                     title="下に移動"
                   >
-                    ↓
+                    <ChevronDownIcon className="w-5 h-5" />
                   </button>
 
                   <button
@@ -139,18 +145,18 @@ export default function RuleList({
                         editingRuleId === rule.id ? null : rule.id
                       )
                     }
-                    className="text-base p-1 rounded hover:bg-gray-200 transition-colors"
+                    className="p-1 rounded hover:bg-gray-200 transition-colors"
                     title="編集"
                   >
-                    ⚙️
+                    <GearIcon className="w-5 h-5" />
                   </button>
 
                   <button
                     onClick={() => onRemoveRule(rule.id)}
-                    className="text-base p-1 rounded hover:bg-red-100 hover:text-red-700 transition-colors"
+                    className="p-1 rounded hover:bg-red-100 hover:text-red-700 transition-colors"
                     title="削除"
                   >
-                    🗑️
+                    <TrashIcon className="w-5 h-5" />
                   </button>
                 </div>
               </div>

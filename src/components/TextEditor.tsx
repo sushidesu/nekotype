@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { EraserIcon, CopyIcon } from "@radix-ui/react-icons"
 
 interface TextEditorProps {
   inputText: string
@@ -48,10 +49,10 @@ export default function TextEditor({
             </h3>
             <button
               onClick={() => onInputChange("")}
-              className="text-xl p-1 rounded hover:bg-gray-100 transition-colors"
+              className="p-1 rounded hover:bg-gray-100 transition-colors"
               title="クリア"
             >
-              🗑️
+              <EraserIcon className="w-5 h-5" />
             </button>
           </div>
           <textarea
@@ -69,11 +70,11 @@ export default function TextEditor({
             </h3>
             <button
               onClick={() => void copyToClipboard(outputText)}
-              className="text-xl p-1 rounded hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="p-1 rounded hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               title="コピー"
               disabled={!outputText}
             >
-              📋
+              <CopyIcon className="w-5 h-5" />
             </button>
           </div>
           <textarea
