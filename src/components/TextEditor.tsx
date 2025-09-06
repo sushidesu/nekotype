@@ -1,5 +1,10 @@
 import { useState } from "react"
-import { EraserIcon, CopyIcon } from "@radix-ui/react-icons"
+import {
+  EraserIcon,
+  CopyIcon,
+  ViewVerticalIcon,
+  ViewHorizontalIcon,
+} from "@radix-ui/react-icons"
 import { preferences } from "../infrastructure/preferences"
 
 interface TextEditorProps {
@@ -35,26 +40,11 @@ export default function TextEditor({
 
   return (
     <div className="bg-white border border-gray-200 rounded-lg p-4 h-fit">
-      <div className="flex justify-between items-center mb-4 pb-2 border-b border-gray-200">
-        <h2 className="text-xl font-semibold text-gray-900">
-          テキストエディタ
-        </h2>
-        <label className="flex items-center gap-2 text-sm cursor-pointer">
-          <input
-            type="checkbox"
-            checked={isEditorVertical}
-            onChange={(e) => handleLayoutChange(e.target.checked)}
-            className="rounded"
-          />
-          縦並び表示
-        </label>
-      </div>
-
       <div
         className={`flex gap-4 ${isEditorVertical ? "flex-col" : "flex-row"}`}
       >
         <div className="flex-1 flex flex-col">
-          <div className="flex justify-between items-center mb-2">
+          <div className="flex items-center gap-2 mb-2">
             <h3 className="text-base font-medium text-gray-700">
               入力テキスト
             </h3>
@@ -65,6 +55,15 @@ export default function TextEditor({
             >
               <EraserIcon className="w-5 h-5" />
             </button>
+            {isEditorVertical && (
+              <button
+                onClick={() => handleLayoutChange(false)}
+                className="p-1 rounded hover:bg-gray-100 transition-colors ml-auto"
+                title="横並び表示に切り替え"
+              >
+                <ViewHorizontalIcon className="w-5 h-5" />
+              </button>
+            )}
           </div>
           <textarea
             value={inputText}
@@ -75,18 +74,26 @@ export default function TextEditor({
         </div>
 
         <div className="flex-1 flex flex-col">
-          <div className="flex justify-between items-center mb-2">
+          <div className="flex items-center gap-2 mb-2">
             <h3 className="text-base font-medium text-gray-700">
               出力テキスト
             </h3>
             <button
               onClick={() => void copyToClipboard(outputText)}
-              className="p-1 rounded hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="p-1 rounded hover:bg-gray-100 transition-colors"
               title="コピー"
-              disabled={!outputText}
             >
               <CopyIcon className="w-5 h-5" />
             </button>
+            {!isEditorVertical && (
+              <button
+                onClick={() => handleLayoutChange(true)}
+                className="p-1 rounded hover:bg-gray-100 transition-colors ml-auto"
+                title="縦並び表示に切り替え"
+              >
+                <ViewVerticalIcon className="w-5 h-5" />
+              </button>
+            )}
           </div>
           <textarea
             value={outputText}

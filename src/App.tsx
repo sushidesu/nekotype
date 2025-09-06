@@ -41,13 +41,10 @@ function App() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
-      <header className="bg-white border-b border-gray-200 py-6 px-8 text-center">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">
-          NekoType - テキスト変換ツール
+      <header className="bg-white border-b border-gray-100 py-2 px-4">
+        <h1 className="text-sm font-medium text-gray-900 text-center">
+          NekoType
         </h1>
-        <p className="text-gray-600">
-          複数の変換ルールを組み合わせてテキストを変換できます
-        </p>
       </header>
 
       <main className="flex-1 grid grid-cols-1 xl:grid-cols-[1fr_400px] gap-4 p-4 max-w-[1400px] mx-auto w-full">
