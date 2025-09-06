@@ -4,6 +4,7 @@ import {
   CopyIcon,
   ViewVerticalIcon,
   ViewHorizontalIcon,
+  ClipboardIcon,
 } from "@radix-ui/react-icons"
 import { preferences } from "../infrastructure/preferences"
 
@@ -38,6 +39,15 @@ export default function TextEditor({
     }
   }
 
+  const pasteFromClipboard = async () => {
+    try {
+      const text = await navigator.clipboard.readText()
+      onInputChange(text)
+    } catch (err) {
+      console.error("Failed to paste text: ", err)
+    }
+  }
+
   return (
     <div className="bg-white border border-gray-200 rounded-lg p-4 h-fit">
       <div
@@ -48,6 +58,13 @@ export default function TextEditor({
             <h3 className="text-base font-medium text-gray-700">
               入力テキスト
             </h3>
+            <button
+              onClick={() => void pasteFromClipboard()}
+              className="p-1 rounded hover:bg-gray-100 transition-colors"
+              title="ペースト"
+            >
+              <ClipboardIcon className="w-5 h-5" />
+            </button>
             <button
               onClick={() => onInputChange("")}
               className="p-1 rounded hover:bg-gray-100 transition-colors"
