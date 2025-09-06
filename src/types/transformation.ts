@@ -1,59 +1,50 @@
 export interface TransformationRule {
-  id: string;
-  name: string;
-  type: string;
-  enabled: boolean;
-  order: number;
+  id: string
+  name: string
+  type: string
+  enabled: boolean
+  order: number
 }
 
 export interface SimpleReplaceRule extends TransformationRule {
-  type: 'simple-replace';
+  type: "simple-replace"
   config: {
-    search: string;
-    replace: string;
-    caseSensitive: boolean;
-  };
+    search: string
+    replace: string
+    caseSensitive: boolean
+  }
 }
 
 export interface RegexRule extends TransformationRule {
-  type: 'regex';
+  type: "regex"
   config: {
-    pattern: string;
-    replacement: string;
-    flags: string;
-  };
+    pattern: string
+    replacement: string
+    flags: string
+  }
 }
 
 export interface UpperCaseRule extends TransformationRule {
-  type: 'uppercase';
-  config: Record<string, never>;
+  type: "uppercase"
+  config: Record<string, never>
 }
 
 export interface LowerCaseRule extends TransformationRule {
-  type: 'lowercase';
-  config: Record<string, never>;
+  type: "lowercase"
+  config: Record<string, never>
 }
 
-export type AnyTransformationRule = 
-  | SimpleReplaceRule 
-  | RegexRule 
-  | UpperCaseRule 
-  | LowerCaseRule;
+export type AnyTransformationRule =
+  | SimpleReplaceRule
+  | RegexRule
+  | UpperCaseRule
+  | LowerCaseRule
 
 export interface TransformationRuleFactory {
-  type: string;
-  name: string;
-  description: string;
-  createDefault: () => AnyTransformationRule;
-  transform: (text: string, rule: AnyTransformationRule) => string;
-  validateConfig: (config: unknown) => boolean;
-}
-
-export interface TransformationEngine {
-  rules: AnyTransformationRule[];
-  transform: (input: string) => string;
-  addRule: (rule: AnyTransformationRule) => void;
-  removeRule: (id: string) => void;
-  updateRule: (id: string, rule: AnyTransformationRule) => void;
-  reorderRules: (rules: AnyTransformationRule[]) => void;
+  type: string
+  name: string
+  description: string
+  createDefault: () => AnyTransformationRule
+  transform: (text: string, rule: AnyTransformationRule) => string
+  validateConfig: (config: unknown) => boolean
 }

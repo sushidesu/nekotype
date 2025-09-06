@@ -1,6 +1,9 @@
-import { useState } from 'react'
-import type { AnyTransformationRule, TransformationRuleFactory } from '../types/transformation'
-import RuleEditor from './RuleEditor'
+import { useState } from "react"
+import type {
+  AnyTransformationRule,
+  TransformationRuleFactory,
+} from "../types/transformation"
+import RuleEditor from "./RuleEditor"
 
 interface RuleListProps {
   rules: AnyTransformationRule[]
@@ -19,24 +22,27 @@ export default function RuleList({
   onAddRule,
   onUpdateRule,
   onRemoveRule,
-  onReorderRules
+  onReorderRules,
 }: RuleListProps) {
-  const [selectedRuleType, setSelectedRuleType] = useState('')
+  const [selectedRuleType, setSelectedRuleType] = useState("")
   const [editingRuleId, setEditingRuleId] = useState<string | null>(null)
 
   const handleAddRule = () => {
     if (selectedRuleType) {
       onAddRule(selectedRuleType)
-      setSelectedRuleType('')
+      setSelectedRuleType("")
     }
   }
 
-  const moveRule = (index: number, direction: 'up' | 'down') => {
+  const moveRule = (index: number, direction: "up" | "down") => {
     const newRules = [...rules]
-    const targetIndex = direction === 'up' ? index - 1 : index + 1
-    
+    const targetIndex = direction === "up" ? index - 1 : index + 1
+
     if (targetIndex >= 0 && targetIndex < newRules.length) {
-      [newRules[index], newRules[targetIndex]] = [newRules[targetIndex], newRules[index]]
+      ;[newRules[index], newRules[targetIndex]] = [
+        newRules[targetIndex],
+        newRules[index],
+      ]
       onReorderRules(newRules)
     }
   }
@@ -52,7 +58,7 @@ export default function RuleList({
             className="flex-1 p-2 border border-gray-300 rounded bg-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
           >
             <option value="">ルールを選択...</option>
-            {availableRuleTypes.map(type => (
+            {availableRuleTypes.map((type) => (
               <option key={type} value={type}>
                 {ruleFactories[type].name}
               </option>
@@ -76,53 +82,69 @@ export default function RuleList({
       ) : (
         <div className="flex flex-col gap-3">
           {rules.map((rule, index) => (
-            <div key={rule.id} className={`border border-gray-200 rounded bg-white ${!rule.enabled ? 'opacity-60' : ''}`}>
+            <div
+              key={rule.id}
+              className={`border border-gray-200 rounded bg-white ${
+                !rule.enabled ? "opacity-60" : ""
+              }`}
+            >
               <div className="flex justify-between items-center p-3 bg-gray-50 border-b border-gray-200">
                 <div className="flex items-center gap-2 flex-1">
-                  <span className="text-xs font-bold text-gray-500">#{index + 1}</span>
+                  <span className="text-xs font-bold text-gray-500">
+                    #{index + 1}
+                  </span>
                   <span className="font-medium text-gray-900">{rule.name}</span>
                   <span className="text-xs text-gray-500 bg-gray-200 px-2 py-1 rounded-full">
                     {ruleFactories[rule.type]?.name}
                   </span>
                 </div>
-                
+
                 <div className="flex items-center gap-2">
                   <label className="flex items-center gap-1 text-xs cursor-pointer">
                     <input
                       type="checkbox"
                       checked={rule.enabled}
-                      onChange={(e) => onUpdateRule(rule.id, { ...rule, enabled: e.target.checked })}
+                      onChange={(e) =>
+                        onUpdateRule(rule.id, {
+                          ...rule,
+                          enabled: e.target.checked,
+                        })
+                      }
                       className="rounded"
                     />
                     有効
                   </label>
-                  
+
                   <button
-                    onClick={() => moveRule(index, 'up')}
+                    onClick={() => moveRule(index, "up")}
                     disabled={index === 0}
                     className="text-base p-1 rounded hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                     title="上に移動"
                   >
                     ↑
                   </button>
-                  
+
                   <button
-                    onClick={() => moveRule(index, 'down')}
+                    onClick={() => moveRule(index, "down")}
                     disabled={index === rules.length - 1}
                     className="text-base p-1 rounded hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                     title="下に移動"
                   >
                     ↓
                   </button>
-                  
+
                   <button
-                    onClick={() => setEditingRuleId(editingRuleId === rule.id ? null : rule.id)}
+                    onClick={() =>
+                      setEditingRuleId(
+                        editingRuleId === rule.id ? null : rule.id
+                      )
+                    }
                     className="text-base p-1 rounded hover:bg-gray-200 transition-colors"
                     title="編集"
                   >
                     ⚙️
                   </button>
-                  
+
                   <button
                     onClick={() => onRemoveRule(rule.id)}
                     className="text-base p-1 rounded hover:bg-red-100 hover:text-red-700 transition-colors"
@@ -132,7 +154,7 @@ export default function RuleList({
                   </button>
                 </div>
               </div>
-              
+
               {editingRuleId === rule.id && (
                 <RuleEditor
                   rule={rule}
