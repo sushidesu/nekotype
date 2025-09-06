@@ -84,7 +84,7 @@ function SortableRuleItem({
           >
             <DragHandleDots2Icon className="w-4 h-4 text-gray-400" />
           </button>
-          <span className="font-medium text-gray-900">{rule.name}</span>
+          <span className="text-gray-900">{rule.name}</span>
           <span className="text-xs text-gray-500 bg-gray-200 px-2 py-1 rounded-full">
             {ruleFactory?.name}
           </span>
@@ -185,7 +185,7 @@ export default function RuleList({
   return (
     <div className="bg-white border border-gray-200 rounded-lg p-4 h-fit max-h-[calc(100vh-200px)] overflow-y-auto overflow-x-visible">
       <div className="mb-4 pb-2 border-b border-gray-200">
-        <h2 className="text-xl font-semibold text-gray-900 mb-4">変換ルール</h2>
+        <h2 className="text-base font-medium text-gray-700 mb-4">変換ルール</h2>
         <div className="flex gap-2">
           <select
             value={selectedRuleType}
@@ -249,7 +249,7 @@ export default function RuleList({
                       <div className="flex justify-between items-center p-3 bg-gray-50 border-b border-gray-200">
                         <div className="flex items-center gap-2 flex-1">
                           <DragHandleDots2Icon className="w-4 h-4 text-gray-400" />
-                          <span className="font-medium text-gray-900">
+                          <span className="text-gray-900">
                             {activeRule.name}
                           </span>
                           <span className="text-xs text-gray-500 bg-gray-200 px-2 py-1 rounded-full">
